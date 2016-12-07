@@ -1,0 +1,56 @@
+<article>
+    <ul class="nav nav-pills">
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref="cart">Cart</a>
+        </li>
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref=".shipping">Shipping</a>
+        </li>
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref=".payment">Payment</a>
+        </li>
+        <li role="presentation" ui-sref-active="active">
+            <a ui-sref=".billing">Review</a>
+        </li>
+        <li role="presentation" ui-sref-active="active" ng-if="checkout.orderIsValid()">
+            <a ng-click="checkout.checkShippingAddresses()">Confirmation</a>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-8" ui-view></div>
+        <div class="col-md-4">
+            <div id="LineItems" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <ng-pluralize count="checkout.currentOrder.LineItemCount" when="{
+							'1': '1 Item in Your Cart',
+							'other': '{} Items in Your Cart'
+						}"></ng-pluralize>
+                    </h3>
+                </div>
+                <div style="max-height:500px; overflow-y:auto;" ordercloud-infinite-scroll controlleras="checkoutLI">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr ng-if="checkout.currentOrder.ShippingAddress">
+                                <td col="3">
+                                    <h5 class="text-primary"><b>Shipping Address</b></h5>
+                                    <p ng-bind-html="checkout.currentOrder.ShippingAddress | address:'full'"></p>
+                                </td>
+                                <td col="3">
+                                    <h5 class="text-primary"><b>Billing Address</b></h5>
+                                    <p ng-bind-html="checkout.currentOrder.BillingAddress | address:'full'"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <h4>Subtotal: <span class="text-success pull-right">{{checkout.currentOrder.Subtotal | currency}}</span></h4>
+					<button class="btn btn-primary form-control" ui-sref=".payment">Next</button>
+					<!--<button class="btn btn-success" ui-sref=".billing">Next</button>-->
+					<!--{{application.$state}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
