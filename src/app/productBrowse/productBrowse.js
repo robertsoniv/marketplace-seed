@@ -39,11 +39,14 @@ function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
                         return node;
                     }
                     return result;
+                },
+                SuppliersList: function(OrderCloud) {
+                    return OrderCloud.AdminAddresses.List();
                 }
             }
         })
         .state('productBrowse.products', {
-            url: '/products?categoryid?favorites?search?page?pageSize?searchOn?sortBy?filters?depth',
+            url: '/products?categoryid?favorites?search?page?pageSize?searchOn?sortBy?filters?depth?suppliers',
             templateUrl: 'productBrowse/templates/productView.tpl.html',
             controller: 'ProductViewCtrl',
             controllerAs: 'productView',
@@ -57,13 +60,21 @@ function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
                     } else if (Parameters.filters) {
                         delete Parameters.filters.ID;
                     }
+
+                    //Filter By ShipFromAddressID for Cups (mocked suppliers)
+                    if (Parameters.suppliers) {
+                        Parameters.filters ? angular.extend(Parameters.filters, Parameters.filters, {ShipFromAddressID:Parameters.suppliers}) : Parameters.filters = {ShipFromAddressID:Parameters.suppliers};
+                    } else if (Parameters.filters) {
+                        delete Parameters.filters.ShipFromAddressID;
+                    }
+
                     return OrderCloud.Me.ListProducts(Parameters.search, Parameters.page, Parameters.pageSize, Parameters.searchOn, Parameters.sortBy, Parameters.filters, Parameters.categoryid);
                 }
             }
         });
 }
 
-function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, Parameters) {
+function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, SuppliersList, Parameters, OrderCloudParameters) {
     var vm = this;
     vm.parameters = Parameters;
     vm.categoryList = CategoryList;
@@ -86,24 +97,23 @@ function ProductBrowseController($state, Underscore, CategoryList, CategoryTree,
 
     //Initiate breadcrumbs is triggered by product list view (child state "productBrowse.products")
     vm.initBreadcrumbs = function(activeCategoryID, ignoreSetNode) {
-        if (!ignoreSetNode) { //first iteration of initBreadcrumbs(), initiate breadcrumb array, set selected node for tree
-            vm.selectedNode = {ID:activeCategoryID};
-            vm.breadcrumb = [];
+        if (!ignoreSetNode) { //first iteration of initBreadcrumbs()
+            vm.selectedNode = {ID:activeCategoryID}; //set selected node for tree
+            vm.breadcrumb = []; //initiate breadcrumb array
         }
-        if (!activeCategoryID) { //at the catalog root, no expanded nodes
-            vm.expandedNodes = angular.copy(vm.breadcrumb);
+        if (!activeCategoryID) { //at the catalog root
+            vm.expandedNodes = angular.copy(vm.breadcrumb); //expanded nodes = [] (no nodes expanded)
         } else {
             var activeCategory = Underscore.findWhere(vm.categoryList.Items, {ID: activeCategoryID});
             if (activeCategory) {
                 vm.breadcrumb.unshift(activeCategory);
-                if (activeCategory.ParentID) {
-                    vm.initBreadcrumbs(activeCategory.ParentID, true);
-                } else { //last iteration, set tree expanded nodes to the breadcrumb
-                    vm.expandedNodes = angular.copy(vm.breadcrumb);
+                if (activeCategory.ParentID) { //if this iteration has a parent category
+                    vm.initBreadcrumbs(activeCategory.ParentID, true); //continue iterating
+                } else { //last iteration
+                    vm.expandedNodes = angular.copy(vm.breadcrumb); //set tree expanded nodes to the breadcrumb
                 }
             }
         }
-
     };
 
     vm.toggleFavorites = function() {
@@ -114,9 +124,24 @@ function ProductBrowseController($state, Underscore, CategoryList, CategoryTree,
             vm.parameters.favorites = true;
             vm.parameters.page = '';
         }
-        $state.go('productBrowse.products', vm.parameters);
+        $state.go('productBrowse.products', OrderCloudParameters.Create(vm.parameters));
     };
 
+    //Cups Specific
+    vm.suppliers = SuppliersList;
+    //Filter current product list by supplier
+    vm.toggleSupplier = function(supplier) {
+        if (vm.parameters.filters && vm.parameters.filters.ShipFromAddressID) delete vm.parameters.ShipFromAddressID;
+        var suppliers = vm.parameters.suppliers ? vm.parameters.suppliers.split('|') : [];
+        var existingIndex = suppliers.indexOf(supplier.ID);
+        if (existingIndex > -1) {
+            suppliers.splice(existingIndex, 1);
+        } else {
+            suppliers.push(supplier.ID);
+        }
+        vm.parameters.suppliers = suppliers.join('|');
+        $state.go('productBrowse.products', OrderCloudParameters.Create(vm.parameters));
+    };
 
 }
 
