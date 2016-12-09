@@ -39,7 +39,7 @@ function CartConfig($stateProvider) {
         });
 }
 
-function CartController($rootScope, $state, OrderCloud, LineItemHelpers, CurrentOrder, LineItemsList, OrderCloudConfirm) {
+function CartController($rootScope, $state, OrderCloud, LineItemHelpers, CurrentOrder, SuppliersList, LineItemsList, OrderCloudConfirm) {
     var vm = this;
     vm.order = CurrentOrder;
     vm.lineItems = LineItemsList;
@@ -79,6 +79,8 @@ function CartController($rootScope, $state, OrderCloud, LineItemHelpers, Current
                         });
                 });
     });
+
+    vm.suppliers = SuppliersList;
 }
 
 function MiniCartController($q, $state, $rootScope,$uibModal, $ocMedia, OrderCloud, LineItemHelpers) {
