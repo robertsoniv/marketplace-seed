@@ -39,9 +39,6 @@ function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
                         return node;
                     }
                     return result;
-                },
-                SuppliersList: function(OrderCloud) {
-                    return OrderCloud.AdminAddresses.List();
                 }
             }
         })
