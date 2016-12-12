@@ -1,0 +1,32 @@
+<form action="." name="OrderCloudProductSearch" class="c-productsearch" ng-submit="$ctrl.onHardEnter($ctrl.searchTerm)" pretty-submit>
+    <div class="form-group" ng-class="{open:noResults}">
+        <div class="c-typeaheadnotify c-typeaheadnotify--noresults" ng-if="$ctrl.searchTerm && noResults">
+            No matches found
+        </div>
+        <div class="c-typeaheadnotify c-typeaheadnotify--loading" ng-if="loading">
+            <div class="indicator-container">
+                <div class="indicator">
+                    <div class="animation">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="search"
+               class="form-control"
+               placeholder="Search Products..."
+               ng-model="$ctrl.searchTerm"
+               uib-typeahead="product as product.Name for product in $ctrl.getSearchResults()"
+               disable-validation-message
+               typeahead-on-select="$ctrl.onSelect($item.ID)"
+               typeahead-focus-first="false"
+               typeahead-wait-ms="300"
+               typeahead-no-results="noResults"
+               typeahead-loading="loading"
+               typeahead-template-url="productSearch/templates/productSearch.typeahead.tpl.html"
+        />
+    </div>
+    <button class="sr-only" type="submit" value="Search"></button>
+</form>

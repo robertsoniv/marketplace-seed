@@ -1,6 +1,5 @@
 angular.module('ordercloud-address', [])
     .directive('ordercloudAddressForm', AddressFormDirective)
-    .directive('ordercloudAddressInfo', AddressInfoDirective)
     .filter('address', AddressFilter)
 ;
 
@@ -19,36 +18,38 @@ function AddressFormDirective(OCGeography) {
     };
 }
 
-function AddressInfoDirective() {
-    return {
-        restrict: 'E',
-        scope: {
-            addressid: '@'
-        },
-        templateUrl: 'common/address/templates/address.info.tpl.html',
-        controller: 'AddressInfoCtrl',
-        controllerAs: 'addressInfo'
-    };
-}
-
 function AddressFilter() {
     return function(address, option) {
         if (!address) return null;
         if (option === 'full') {
             var result = [];
-            if (address.AddressName) {
-                result.push(address.AddressName);
+
+            //address name
+            if (address.AddressName) result.push('<b>' + address.AddressName + '</b>');
+
+            //address first/last
+            if (address.FirstName || address.LastName) {
+                result.push((address.FirstName && !address.LastName) ? address.FirstName : ((!address.FirstName && address.LastName) ? address.LastName : (address.FirstName + ' ' + address.LastName)));
             }
-            result.push((address.FirstName ? address.FirstName + ' ' : '') + address.LastName);
+
+            //company name
+            if (address.CompanyName) result.push(address.CompanyName);
+
+            //street 1 (required)
             result.push(address.Street1);
-            if (address.Street2) {
-                result.push(address.Street2);
-            }
+
+            //street 1 (optional)
+            if (address.Street2)  result.push(address.Street2);
+
+            //city, state zip
             result.push(address.City + ', ' + address.State + ' ' + address.Zip);
-            return result.join('\n');
+
+            if (address.Phone) result.push(address.Phone);
+
+            return result.join('<br/>');
         }
         else {
             return address.Street1 + (address.Street2 ? ', ' + address.Street2 : '');
         }
-    }
+    };
 }

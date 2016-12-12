@@ -1,0 +1,36 @@
+<form name="OrderCloudProductSearch" id="OrderCloudProductSearch" autocomplete="off" autocorrect="off" ng-submit="$ctrl.onHardEnter($ctrl.searchTerm)">
+    <fieldset class="form-group">
+        <label for="ProductSearchInput" class="sr-only">Search Products</label>
+        <input type="text"
+               id="ProductSearchInput"
+               class="form-control"
+               placeholder="Search Products..."
+               ng-model="$ctrl.searchTerm"
+               uib-typeahead="product as product.Name for product in $ctrl.getSearchResults()"
+               typeahead-append-to="'.modal-content'"
+               typeahead-on-select="$ctrl.onSelect($item.ID)"
+               typeahead-focus-first="false"
+               typeahead-wait-ms="300"
+               typeahead-no-results="noResults"
+               typeahead-loading="loading"
+               typeahead-template-url="productSearch/templates/productSearch.typeahead.tpl.html"/>
+    </fieldset>
+    <button class="sr-only" type="submit" value="Search"></button>
+    <div class="c-mobilesearch-cancel" ng-click="$ctrl.cancel()">
+        <i class="fa fa-times text-muted"></i>
+    </div>
+</form>
+<div class="c-typeaheadnotify c-typeaheadnotify--noresults" ng-if="$ctrl.searchTerm && noResults">
+    No matches found
+</div>
+<div class="c-typeaheadnotify c-typeaheadnotify--loading" ng-if="loading">
+    <div class="indicator-container">
+        <div class="indicator">
+            <div class="animation">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,9 @@
 {
-  "appname": "Angular Seed",
+  "appname": "Cups Marketplace",
   "scope": "FullAccess",
-  "clientid": "73FDFC1E-6FD5-4AFA-8751-C42C5CF47B57",
-  "buyerid": "A",
-  "catalogid": "SHARED",
+  "clientid": "F286B844-C604-4081-9D22-F79EA176D8DC",
+  "buyerid": "cafebiba",
+  "catalogid": "cafebiba",
   "environment": "prod",
   "anonymous": false
 }

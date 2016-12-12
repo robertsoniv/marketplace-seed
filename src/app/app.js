@@ -9,19 +9,20 @@ angular.module('orderCloud', [
     'orderCloud.sdk',
     'LocalForageModule',
     'toastr',
-    'cgBusy',
+    'angular-busy',
     'jcs-autoValidate',
+    'treeControl',
     'ordercloud-infinite-scroll',
     'ordercloud-buyer-select',
     'ordercloud-catalog-select',
-    'ordercloud-favorite-product',
     'ordercloud-search',
     'ordercloud-assignment-helpers',
     'ordercloud-paging-helpers',
     'ordercloud-auto-id',
     'ordercloud-address',
     'ordercloud-lineitems',
-    'ordercloud-geography'
+    'ordercloud-geography',
+    'hl.sticky'
     ])
     .run(SetBuyerID)
     .run(SetCatalogID)
@@ -51,9 +52,9 @@ function Routing($urlRouterProvider, $urlMatcherFactoryProvider, $locationProvid
     $locationProvider.html5Mode(true);
 }
 
-function ErrorHandling($provide) {
+function ErrorHandling($qProvider, $provide) {
     $provide.decorator('$exceptionHandler', handler);
-
+    $qProvider.errorOnUnhandledRejections(false);
     function handler($delegate, $injector) {
         return function(ex, cause) {
             $delegate(ex, cause);
@@ -68,10 +69,10 @@ function AppCtrl($q, $rootScope, $state, $ocMedia, toastr, LoginService, appname
     vm.title = appname;
     vm.$state = $state;
     vm.$ocMedia = $ocMedia;
-    vm.contentLoading = undefined;
+    vm.stateLoading = undefined;
 
     function cleanLoadingIndicators() {
-        if (vm.contentLoading && vm.contentLoading.promise && !vm.contentLoading.promise.$cgBusyFulfilled) vm.contentLoading.resolve(); //resolve leftover loading promises
+        if (vm.stateLoading && vm.stateLoading.promise && !vm.stateLoading.promise.$cgBusyFulfilled) vm.stateLoading.resolve(); //resolve leftover loading promises
     }
 
     //Detect if the app was loaded on a touch device with relatively good certainty
@@ -93,7 +94,7 @@ function AppCtrl($q, $rootScope, $state, $ocMedia, toastr, LoginService, appname
         defer.wrapperClass = 'indicator-container';
         (toState.data && toState.data.loadingMessage) ? defer.message = toState.data.loadingMessage : defer.message = null;
         defer.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        vm.contentLoading = defer;
+        vm.stateLoading = defer;
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState) {
