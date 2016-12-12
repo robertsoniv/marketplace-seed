@@ -2,8 +2,6 @@ angular.module('orderCloud')
 	.config(checkoutPaymentConfig)
 	.controller('CheckoutPaymentCtrl', CheckoutPaymentController)
 	.directive('ocCheckoutPayment', OCCheckoutPayment)
-    //toggle allowMultiplePayments if you do not wish to allow multiple payments on the same order
-    .constant('allowMultiplePayments', true)
 ;
 
 function checkoutPaymentConfig($stateProvider) {
@@ -14,14 +12,6 @@ function checkoutPaymentConfig($stateProvider) {
 			controller: 'CheckoutPaymentCtrl',
 			controllerAs: 'checkoutPayment',
 			resolve: {
-                AvailableBillingAddresses: function($q, Underscore, OrderCloud) {
-                    var dfd = $q.defer();
-                    OrderCloud.Me.ListAddresses()
-                        .then(function(data) {
-                            dfd.resolve(Underscore.where(data.Items, {Billing: true}));
-                        });
-                    return dfd.promise;
-				},
                 AvailableCreditCards: function(OrderCloud) {
                     return OrderCloud.Me.ListCreditCards();
                 },
@@ -34,12 +24,11 @@ function checkoutPaymentConfig($stateProvider) {
     ;
 }
 
-function CheckoutPaymentController($state, $exceptionHandler, $rootScope, Underscore, toastr, OrderCloud, AddressSelectModal, OrderPayments, allowMultiplePayments, creditCardExpirationDate, MyAddressesModal, AvailableBillingAddresses, AvailableCreditCards, AvailableSpendingAccounts, CurrentOrder) {
+function CheckoutPaymentController($state, $exceptionHandler, $rootScope, Underscore, toastr, OrderCloud, AddressSelectModal, OrderPayments, MyAddressesModal, AvailableCreditCards, AvailableSpendingAccounts, CurrentOrder, CheckoutConfig) {
 	var vm = this;
     vm.creditCards = AvailableCreditCards.Items;
     vm.spendingAccounts = AvailableSpendingAccounts.Items;
 
-    vm.allowMultiplePayments = allowMultiplePayments;
     vm.currentOrderPayments = OrderPayments.Items;
     
     vm.paymentMethods = [
@@ -57,8 +46,8 @@ function CheckoutPaymentController($state, $exceptionHandler, $rootScope, Unders
     vm.today = new Date();
     vm.months =['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     vm.years = Underscore.range(vm.today.getFullYear(), vm.today.getFullYear() + 20, 1);
-    vm.expireMonth = creditCardExpirationDate.expirationMonth;
-    vm.expireYear = creditCardExpirationDate.expirationYear;
+    //vm.expireMonth = creditCardExpirationDate.expirationMonth;
+    //vm.expireYear = creditCardExpirationDate.expirationYear;
 
     vm.createAddress = createAddress;
     vm.changeBillingAddress = changeBillingAddress;
@@ -84,11 +73,15 @@ function CheckoutPaymentController($state, $exceptionHandler, $rootScope, Unders
             });
     }
 
-    function changeBillingAddress(addresses) {
-        AddressSelectModal.Open(addresses)
+    function changeBillingAddress() {
+        AddressSelectModal.Open('billing')
             .then(function(address) {
-                CurrentOrder.BillingAddressID = address.ID;
-                saveBillingAddress(CurrentOrder);
+                if (address == 'create') {
+                    createAddress();
+                } else {
+                    CurrentOrder.BillingAddressID = address.ID;
+                    saveBillingAddress(CurrentOrder);
+                }
             });
     }
 

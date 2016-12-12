@@ -6,7 +6,12 @@ angular.module('orderCloud')
 	.controller('OrderConfirmationCtrl', OrderConfirmationController)
     .directive('ordercloudConfirmationLineitems', ConfirmationLineItemsListDirective)
     .controller('ConfirmationLineItemsCtrl', ConfirmationLineItemsController)
-    .constant('isMultipleAddressShipping', false)
+    .constant('CheckoutConfig', {
+        ShippingRates: true,
+        MultipleShipments: false,
+        TaxRates: false,
+        MultiplePayments: false
+    })
 ;
 
 function checkoutConfig($stateProvider) {
@@ -18,9 +23,6 @@ function checkoutConfig($stateProvider) {
 			controller: 'CheckoutCtrl',
 			controllerAs: 'checkout',
 			resolve: {
-                ShippingAddresses: function(OrderCloud) {
-                    return OrderCloud.Me.ListAddresses(null, 1, 100, null, null, {Shipping: true});
-                },
                 OrderShipAddress: function($q, OrderCloud, CurrentOrder){
                     var deferred = $q.defer();
 
@@ -39,8 +41,8 @@ function checkoutConfig($stateProvider) {
 
                     return deferred.promise;
                 },
-                BillingAddresses: function(OrderCloud) {
-                    return OrderCloud.Me.ListAddresses(null, 1, 100, null, null, {Billing: true});
+                CurrentPromotions: function(CurrentOrder, OrderCloud) {
+                    return OrderCloud.Orders.ListPromotions(CurrentOrder.ID);
                 },
                 OrderBillingAddress: function($q, OrderCloud, CurrentOrder){
                     var deferred = $q.defer();
@@ -132,15 +134,33 @@ function CheckoutService() {
     }
 }
 
-function CheckoutController($state, $rootScope, toastr, OrderCloud, CheckoutService, CurrentOrder, ShippingAddresses, OrderShipAddress, BillingAddresses, OrderBillingAddress, OrderPayments) {
+function CheckoutController($state, $rootScope, toastr, OrderCloud, CheckoutService, CurrentOrder, OrderShipAddress, CurrentPromotions, OrderBillingAddress, OrderPayments, CheckoutConfig) {
     var vm = this;
     vm.currentOrder = CurrentOrder;
     vm.currentOrder.ShippingAddress = OrderShipAddress;
     vm.currentOrder.BillingAddress = OrderBillingAddress;
-    vm.shippingAddresses = ShippingAddresses.Items;
-    vm.billingAddresses = BillingAddresses.Items;
-    vm.isMultipleAddressShipping = true;
+    vm.currentPromotions = CurrentPromotions.Items;
+    vm.checkoutConfig = CheckoutConfig;
     vm.currentOrderPayments = OrderPayments.Items;
+
+    function updateOrder(data) {
+        vm.currentOrder.Subtotal = data.Subtotal;
+        vm.currentOrder.Total = data.Total;
+        vm.currentOrder.ShippingCost = data.ShippingCost;
+        vm.currentOrder.PromotionDiscount = data.PromotionDiscount;
+        updatePromotions();
+    }
+
+    function updatePromotions() {
+        OrderCloud.Orders.ListPromotions(vm.currentOrder.ID)
+            .then(function(data) {
+                if (data.Meta) {
+                    vm.currentPromotions = data.Items;
+                } else {
+                    vm.currentPromotions = data;
+                }
+            })
+    }
 
     vm.orderIsValid = function() {
         var orderPaymentsTotal = 0;
@@ -171,7 +191,7 @@ function CheckoutController($state, $rootScope, toastr, OrderCloud, CheckoutServ
     $rootScope.$on('OC:UpdateOrder', function(event, OrderID) {
         OrderCloud.Orders.Get(OrderID)
             .then(function(data) {
-                vm.currentOrder.Subtotal = data.Subtotal;
+                updateOrder(data);
             });
     });
 
@@ -195,13 +215,19 @@ function CheckoutController($state, $rootScope, toastr, OrderCloud, CheckoutServ
             toastr.error('Please select a shipping address for all line items');
         }
     };
+
+    vm.removePromotion = function(promotion) {
+        OrderCloud.Orders.RemovePromotion(vm.currentOrder.ID, promotion.Code)
+            .then(function(data) {
+                updateOrder(data);
+            })
+    };
 }
 
-function OrderConfirmationController($rootScope, $state, toastr, OrderCloud, CurrentOrder, isMultipleAddressShipping, OrderPayments) {
+function OrderConfirmationController($rootScope, $state, toastr, OrderCloud, CurrentOrder, CheckoutConfig, OrderPayments) {
     var vm = this;
 
     vm.currentOrder = CurrentOrder;
-    vm.isMultipleAddressShipping = isMultipleAddressShipping;
     vm.orderPayments = OrderPayments.Items;
 
     angular.forEach(vm.orderPayments, function(payment, index) {
@@ -238,10 +264,9 @@ function OrderConfirmationController($rootScope, $state, toastr, OrderCloud, Cur
     };
 }
 
-function OrderReviewController($q, toastr, OrderCloud, LineItemHelpers, SubmittedOrder, isMultipleAddressShipping) {
+function OrderReviewController($q, toastr, OrderCloud, LineItemHelpers, SubmittedOrder, CheckoutConfig) {
 	var vm = this;
     vm.submittedOrder = SubmittedOrder;
-    vm.isMultipleAddressShipping = isMultipleAddressShipping;
 
     OrderCloud.Payments.List(vm.submittedOrder.ID)
         .then(function(data) {
@@ -308,10 +333,9 @@ function ConfirmationLineItemsListDirective() {
     };
 }
 
-function ConfirmationLineItemsController($scope, $q, OrderCloud, LineItemHelpers, isMultipleAddressShipping) {
+function ConfirmationLineItemsController($scope, $q, OrderCloud, LineItemHelpers, CheckoutConfig) {
     var vm = this;
     vm.lineItems = {};
-    vm.isMultipleAddressShipping = isMultipleAddressShipping;
 
     $scope.$watch(function() {
         return $scope.order.ID;

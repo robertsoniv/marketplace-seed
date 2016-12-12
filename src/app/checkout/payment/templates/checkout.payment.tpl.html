@@ -1,31 +1,22 @@
-<div>
-    <div class="page-header">
-        <button type="button" class="btn btn-success pull-right" ng-click="checkoutPayment.createAddress()"><i class="fa fa-plus-circle"></i> Create Address</button>
-        <h3>Billing Address</h3>
+<div ng-init="checkoutPayment.setAmountMax(checkout.currentOrder)">
+    <h4>Payment</h4>
+    <oc-checkout-payment ng-repeat="payment in checkoutPayment.currentOrderPayments"></oc-checkout-payment>
+    <div class="text-center add-payment" ng-if="checkout.checkoutConfig.MultiplePayments">
+        <button type="button" class="btn btn-default" ng-click="checkoutPayment.createPayment(checkout.currentOrder)" ng-disabled="!checkoutPayment.canAddPayment(checkout.currentOrder, checkoutPayment.currentOrderPayments)"><i class="fa fa-plus-circle"></i> Add Another Payment</button>
     </div>
-    <div class="panel panel-default" ng-if="checkout.currentOrder.BillingAddress">
-        <div class="panel-body">
-            <div class="pull-right">
-                <a href="" ng-if="checkout.billingAddresses.length" ng-click="checkoutPayment.changeBillingAddress(checkout.billingAddresses)">Change</a>
-            </div>
-            <p ng-bind-html="checkout.currentOrder.BillingAddress | address:'full'"></p>
+</div>
+<hr>
+<a href="" class="pull-right" ng-click="checkoutPayment.createAddress()"><i class="fa fa-plus-circle"></i> Create Address</a>
+<h4>Billing Address</h4>
+<div class="well text-center" ng-if="!checkout.currentOrder.BillingAddress">
+    You currently do not have a billing address selected. <br />
+    <a href="" ng-click="checkoutPayment.changeBillingAddress(checkout.billingAddresses)">Select one now</a>
+</div>
+<div class="panel panel-default" ng-if="checkout.currentOrder.BillingAddress">
+    <div class="panel-body">
+        <div class="pull-right">
+            <a href="" ng-click="checkoutPayment.changeBillingAddress()">Change</a>
         </div>
-    </div>
-    <div class="well text-center" ng-if="checkout.billingAddresses.length && !checkout.currentOrder.BillingAddress">
-        You currently do not have a billing address selected. <br />
-        <a href="" ng-click="checkoutPayment.changeBillingAddress(checkout.billingAddresses)">Select one now</a>
-    </div>
-    <div class="well text-center" ng-if="!checkout.billingAddresses.length && !checkout.currentOrder.BillingAddress">
-        You currently do not have any addresses available. <br />
-        <a href="" ng-click="checkoutPayment.createAddress()">Create one now</a>
-    </div>
-    <div class="panel panel-default" ng-init="checkoutPayment.setAmountMax(checkout.currentOrder)">
-        <div class="panel-heading">Payment</div>
-        <div class="panel-body">
-            <oc-checkout-payment ng-repeat="payment in checkoutPayment.currentOrderPayments"></oc-checkout-payment>
-            <div class="text-center add-payment"  ng-if="checkoutPayment.allowMultiplePayments">
-                <button type="button" class="btn btn-default" ng-click="checkoutPayment.createPayment(checkout.currentOrder)" ng-disabled="!checkoutPayment.canAddPayment(checkout.currentOrder, checkoutPayment.currentOrderPayments)"><i class="fa fa-plus-circle"></i> Add Another Payment</button>
-            </div>
-        </div>
+        <p ng-bind-html="checkout.currentOrder.BillingAddress | address:'full'"></p>
     </div>
 </div>

@@ -1,22 +1,29 @@
-<div>
-    <div class="page-header">
-        <button type="button" class="btn btn-success pull-right" ng-click="checkoutShipping.createAddress()"><i class="fa fa-plus-circle"></i> Create Address</button>
-        <h3>Shipping</h3>
-    </div>
-    <div class="panel panel-default" ng-if="checkout.currentOrder.ShippingAddress">
-        <div class="panel-body">
-            <div class="pull-right">
-                <a href="" ng-if="checkout.shippingAddresses.length" ng-click="checkoutShipping.changeShippingAddress(checkout.shippingAddresses)">Change</a>
-            </div>
-            <p ng-bind-html="checkout.currentOrder.ShippingAddress | address:'full'"></p>
+<a href="" class="btn btn-link pull-right" ng-click="checkoutShipping.createAddress()"><i class="fa fa-plus-circle"></i> New Address</a>
+<h4>Delivery Address</h4>
+<div class="panel panel-default" ng-if="checkout.currentOrder.ShippingAddress">
+    <div class="panel-body">
+        <div class="pull-right">
+            <a href="" ng-click="checkoutShipping.changeShippingAddress()">Change</a>
         </div>
+        <p ng-bind-html="checkout.currentOrder.ShippingAddress | address:'full'"></p>
     </div>
-    <div class="well text-center" ng-if="checkout.shippingAddresses.length && !checkout.currentOrder.ShippingAddress">
-        You currently do not have a shipping address selected. <br />
-        <a href="" ng-click="checkoutShipping.changeShippingAddress(checkout.shippingAddresses)">Select one now</a>
-    </div>
-    <div class="well text-center" ng-if="!checkout.shippingAddresses.length && !checkout.currentOrder.ShippingAddress">
-        You currently do not have any addresses available. <br />
-        <a href="" ng-click="checkoutShipping.createAddress()">Create one now</a>
-    </div>
+</div>
+<div class="well text-center" ng-if="!checkout.currentOrder.ShippingAddress">
+    You currently do not have a shipping address selected. <br />
+    <a href="" ng-click="checkoutShipping.changeShippingAddress()">Select one now</a>
+</div>
+<div ng-if="checkoutShipping.shippingRates.length">
+    <hr>
+    <h4>Shipping Method</h4>
+    <form name="OCShippingRates">
+        <fieldset class="form-group" ng-repeat="shipment in checkoutShipping.shippingRates">
+            <label for="{{'Shipper' + $index}}" ng-if="checkoutShipping.shippingRates.length > 1">Shipment {{$index + 1}} ({{shipment.LineItemIDs.length}} Line Items)</label>
+            <select id="{{'Shipper' + $index}}" class="form-control"
+                    ng-model="shipment.SelectedShipper"
+                    ng-options="shipper as (shipper.Description + ' (' + (shipper.Price | currency) + ')') for shipper in shipment.Rates"
+                    ng-change="checkoutShipping.shipperSelected()"
+                    required>
+            </select>
+        </fieldset>
+    </form>
 </div>
