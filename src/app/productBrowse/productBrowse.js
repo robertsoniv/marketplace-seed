@@ -71,7 +71,7 @@ function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
         });
 }
 
-function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, SuppliersList, Parameters) {
+function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, SuppliersList, OrderCloudParameters, Parameters) {
     var vm = this;
     vm.parameters = Parameters;
     vm.categoryList = CategoryList;
