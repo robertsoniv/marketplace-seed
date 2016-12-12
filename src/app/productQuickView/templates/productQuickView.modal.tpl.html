@@ -8,8 +8,8 @@
 			<div class="col-md-6">
 				<!--PRODUCT IMAGE-->
 				<div class="thumbnail">
-					<img class="img-responsive" alt="{{productQuickView.item.xp.image.Name || 'Product Image'}}"
-						 ng-src="{{productQuickView.item.xp.image.URL || 'http://placehold.it/600x600?text=' + productQuickView.item.Name}}">
+					<img class="img-responsive" alt="{{productQuickView.item.ID + '.jpg'}}"
+						 ng-src="{{'assets/images/products/' + productQuickView.item.ID + '.jpg'}}">
 				</div>
 			</div>
 			<div class="col-md-6">
