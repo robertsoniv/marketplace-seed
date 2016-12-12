@@ -65,6 +65,9 @@ function BaseConfig($stateProvider) {
             },
             AnonymousUser: function($q, OrderCloud, CurrentUser) {
                 CurrentUser.Anonymous = angular.isDefined(JSON.parse(atob(OrderCloud.Auth.ReadToken().split('.')[1])).orderid);
+            },
+            SuppliersList: function(OrderCloud) {
+                return OrderCloud.AdminAddresses.List();
             }
         }
     });

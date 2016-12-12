@@ -36,6 +36,15 @@
                             <i class="fa" ng-class="{'fa-heart-o text-muted': !productBrowse.parameters.favorites, 'fa-heart text-danger': productBrowse.parameters.favorites}"></i> My Favorites
                         </span>
                     </li>
+                    <li class="list-group-item" ng-repeat="supplier in productBrowse.suppliers.Items">
+                        <span ng-click="productBrowse.toggleSupplier(supplier)">
+                            <i class="fa" ng-class="{
+                                'fa-circle-o text-muted': productBrowse.parameters.suppliers.indexOf(supplier.ID) == -1 || !productBrowse.parameters.suppliers,
+                                'fa-circle text-primary': productBrowse.parameters.suppliers.indexOf(supplier.ID) > -1
+                            }"></i>
+                            {{supplier.CompanyName}}
+                        </span>
+                    </li>
                 </ul>
             </div>
         </aside>
