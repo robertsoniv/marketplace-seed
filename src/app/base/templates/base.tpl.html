@@ -21,16 +21,24 @@
         </nav>
     </aside>
     <div class="l-cups-wrapper__content">
-        <header>
-            <a class="btn btn-default menu-toggle" data-ng-click="isToggled = !isToggled">Toggle Menu</a>
-            <div class="c-topnav__item c-topnav__search hidden-lg hidden-md">
-                <a href="" ng-click="base.mobileSearch()"><i class="fa fa-search"></i></a>
-            </div>
-            <ordercloud-product-search class="c-topnav__item c-topnav__search hidden-xs hidden-sm"></ordercloud-product-search>
-            <div class="c-topnav__item c-topnav__cart">
-                <a ui-sref="cart" ui-sref-opts="{reload:'base'}"><i class="fa fa-shopping-cart"></i> <span class="sr-only">Shopping Cart</span> <span class="badge" ng-bind="base.currentOrder.LineItemCount"></span></a>
-            </div>
+        <header class="c-cups-header c-cups-header--fixed-top">
+            <nav class="c-cups-topnav clearfix">
+                <div class="c-topnav__item hidden-lg hidden-md hidden-sm">
+                    <button class="c-cups-sidebar__toggle" data-ng-click="isToggled = !isToggled">
+                        <span></span><span></span><span></span><span></span>
+                    </button>
+                </div>
+                <!--<div class="c-topnav__item c-topnav__search hidden-lg hidden-md">
+                    <a href="" ng-click="base.mobileSearch()"><i class="fa fa-search"></i></a>
+                </div>-->
+                <ordercloud-product-search class="c-topnav__item c-topnav__search"></ordercloud-product-search>
+                <div class="c-topnav__item c-topnav__cart">
+                    <a ui-sref="cart" ui-sref-opts="{reload:'base'}"><i class="fa fa-shopping-cart"></i> <span class="sr-only">Shopping Cart</span> <span class="badge" ng-bind="base.currentOrder.LineItemCount"></span></a>
+                </div>
+            </nav>
         </header>
-        <main ui-view cg-busy="application.stateLoading"></main>
+        <div class="container-fluid">
+            <main ui-view cg-busy="application.stateLoading"></main>
+        </div>
     </div>
 </div>

@@ -4,9 +4,10 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
- body {
+body {
     overflow-x: hidden;
- }
+}
+
 
 /* Toggle Styles */
 
@@ -17,22 +18,22 @@
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
     &.toggled {
-        padding-left: 250px;
+        padding-left: @cups-sidebar-width;
         .l-cups-wrapper__sidebar {
-            width: 250px;
+            width: @cups-sidebar-width;
         }
         .l-cups-wrapper__content {
             position: absolute;
-            margin-right: -250px;
+            margin-right: -@cups-sidebar-width;
         }
     }
     &__sidebar {
         z-index: 1000;
         position: fixed;
-        left: 250px;
+        left: @cups-sidebar-width;
         width: 0;
         height: 100%;
-        margin-left: -250px;
+        margin-left: -@cups-sidebar-width;
         overflow-y: auto;
         background: @cups-dark;
         -webkit-transition: all 0.5s ease;
@@ -42,19 +43,16 @@
     }
     &__content {
         width: 100%;
-        padding-right: @grid-gutter-width;
+        padding-top: @body-padding-top;
         position: absolute;
     }
 }
 
 @media(min-width:@screen-sm) {
-    .menu-toggle {
-        display: none;
-    }
     .l-cups-wrapper {
-        padding-left: 250px;
+        padding-left: @cups-sidebar-width;
         &__sidebar {
-            width: 250px;
+            width: @cups-sidebar-width;
         }
         &__content {
             padding-right: 0;
@@ -62,9 +60,9 @@
             margin-right: 0;
         }
         &.toggled {
-            padding-left: 250px;
+            padding-left: @cups-sidebar-width;
             .l-cups-wrapper__sidebar {
-                width: 250px;
+                width: @cups-sidebar-width;
             }
             .l-cups-wrapper__content {
                 position: relative;
@@ -74,12 +72,13 @@
     }
 }
 
+
 /* Sidebar Styles */
 
 .c-cups-sidebar {
     position: absolute;
     top: 0;
-    width: 250px;
+    width: @cups-sidebar-width;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -94,16 +93,85 @@
             max-width: 102px;
         }
     }
+    &__toggle {
+        width: 20px;
+        height: 18px;
+        position: relative;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: .5s ease-in-out;
+        -moz-transition: .5s ease-in-out;
+        -o-transition: .5s ease-in-out;
+        transition: .5s ease-in-out;
+        cursor: pointer;
+        span {
+            display: block;
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background-color: @navbar-default-link-color;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+            -webkit-transition: .25s ease-in-out;
+            -moz-transition: .25s ease-in-out;
+            -o-transition: .25s ease-in-out;
+            transition: .25s ease-in-out;
+            &:nth-child(1) {
+                top: 0px;
+            }
+            &:nth-child(2),
+            &:nth-child(3) {
+                top: 5px;
+            }
+            &:nth-child(4) {
+                top: 10px;
+            }
+        }
+        .toggled & {
+            span:nth-child(1) {
+                top: 9px;
+                width: 0%;
+                left: 50%;
+            }
+            span:nth-child(2) {
+                -webkit-transform: rotate(45deg);
+                -moz-transform: rotate(45deg);
+                -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            span:nth-child(3) {
+                -webkit-transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                -o-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+            }
+            span:nth-child(4) {
+                top: 9px;
+                width: 0%;
+                left: 50%;
+            }
+        }
+        @media(min-width:@screen-sm) {
+            display: none;
+        }
+    }
 }
 
 .c-cups-nav {
     &--stacked {
         // override bootstrap specificity
         &.nav {
-            > li {
+            >li {
                 line-height: 19px;
                 padding-bottom: @padding-large-vertical;
-                > a {
+                >a {
                     padding-left: @grid-gutter-width;
                 }
             }

@@ -1,0 +1,14 @@
+.c-cups-header {
+    background-color: #e7e7e8;
+    min-height: @navbar-height;
+    margin-bottom: @navbar-margin-bottom;
+    &--fixed-top {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1030;
+        @media(min-width:@screen-sm) {
+            width: calc(~"100% - @{cups-sidebar-width}");
+        }
+    }
+}
