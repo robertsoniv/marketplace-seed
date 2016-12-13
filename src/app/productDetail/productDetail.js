@@ -20,10 +20,12 @@ function ProductConfig($stateProvider) {
 }
 
 
-function ProductDetailController($exceptionHandler, Product, CurrentOrder, LineItemHelpers, toastr) {
+function ProductDetailController($exceptionHandler, Product, CurrentOrder, LineItemHelpers, SuppliersList, toastr, Underscore) {
     var vm = this;
     vm.item = Product;
     vm.finalPriceBreak = null;
+
+    vm.supplier = Underscore.where(SuppliersList.Items, function(s) { return s.ID == vm.item.ShipFromAddressID})[0];
 
     vm.addToCart = function() {
         LineItemHelpers.AddItem(CurrentOrder, vm.item)

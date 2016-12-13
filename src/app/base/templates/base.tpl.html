@@ -8,13 +8,36 @@
                 <a ui-sref="home" class="c-cups-sidebar__brand" data-ng-click="isToggled = !isToggled"><img src="assets/images/cups_logo.png" alt="CUPS"></a>
             </header>
             <ul class="nav nav-pills nav-stacked c-cups-nav--stacked">
+
+                <li>
+                    <a href="" ui-sref="productBrowse({favorites:'', categoryid:'',suppliers:'', sortBy:''})">All Products</a>
+                </li>
+                <li class="c-cups-nav__header">Categories</li>
+                <treecontrol class="oc-tree"
+                             tree-model="base.treeData"
+                             options="base.treeOptions"
+                             selected-node="base.selectedNode"
+                             expanded-nodes="base.expandedNodes"
+                             on-selection="base.selectNode(node)">
+                    {{node.Name}}
+                </treecontrol>
+                <li class="c-cups-nav__divider"></li>
                 <li class="c-cups-nav__header">Suppliers</li>
-                <li role="presentation"><a ui-sref="productBrowse.products({page:'', favorites:'', sortBy:'', categoryid:''})" data-ng-click="isToggled = !isToggled">Browse</a></li>
+                <li ng-repeat="supplier in base.suppliers.Items">
+                    <a ng-click="base.toggleSupplier(supplier)">
+                        <i class="fa" ng-class="{
+                            'fa-circle-o text-muted': base.parameters.suppliers.indexOf(supplier.ID) == -1 || !base.parameters.suppliers,
+                            'fa-circle text-primary': base.parameters.suppliers.indexOf(supplier.ID) > -1
+                        }"></i>
+                        {{supplier.CompanyName}}
+                    </a>
+                </li>
+                <!--<li role="presentation"><a ui-sref="productBrowse.products({page:'', favorites:'', sortBy:'', categoryid:''})" data-ng-click="isToggled = !isToggled">Browse</a></li>-->
                 <li class="c-cups-nav__divider"></li>
                 <li class="c-cups-nav__header">Account</li>
                 <li><a ui-sref="account.settings" data-ng-click="isToggled = !isToggled">Settings</a></li>
-                <li><a ui-sref="myAddresses" data-ng-click="isToggled = !isToggled">My Addresses</a></li>
-                <li><a ui-sref="favoriteProducts" data-ng-click="isToggled = !isToggled">My Favorite Products</a></li>
+                <li><a ui-sref="myAddresses" data-ng-click="isToggled = !isToggled">Addresses</a></li>
+                <li><a ui-sref="favoriteProducts" data-ng-click="isToggled = !isToggled">Favorite Products</a></li>
                 <li class="c-cups-nav__divider"></li>
                 <li><a ng-click="application.logout()" data-ng-click="isToggled = !isToggled">Logout</a></li>
             </ul>

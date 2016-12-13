@@ -68,12 +68,37 @@ function BaseConfig($stateProvider) {
             },
             SuppliersList: function(OrderCloud) {
                 return OrderCloud.AdminAddresses.List();
+            },
+            Parameters: function ($stateParams, OrderCloudParameters) {
+                return OrderCloudParameters.Get($stateParams);
+            },
+            CategoryList: function(OrderCloud) {
+                return OrderCloud.Me.ListCategories(null, 1, 100, null, null, null, 'all');
+            },
+            CategoryTree: function(CategoryList, Underscore) {
+                var result = [];
+                angular.forEach(Underscore.where(CategoryList.Items, {ParentID: null}), function(node) {
+                    result.push(getnode(node));
+                });
+                function getnode(node) {
+                    var children = Underscore.where(CategoryList.Items, {ParentID: node.ID});
+                    if (children.length > 0) {
+                        node.children = children;
+                        angular.forEach(children, function(child) {
+                            return getnode(child);
+                        });
+                    } else {
+                        node.children = [];
+                    }
+                    return node;
+                }
+                return result;
             }
         }
     });
 }
 
-function BaseController($rootScope, $state, Underscore, defaultErrorMessageResolver, ProductSearch, CurrentUser, CurrentOrder, OrderCloud) {
+function BaseController($rootScope, $state, Underscore, defaultErrorMessageResolver, ProductSearch, CurrentUser, CurrentOrder, SuppliersList, Parameters, CategoryList, CategoryTree, OrderCloudParameters, OrderCloud) {
     var vm = this;
     vm.currentUser = CurrentUser;
     vm.currentOrder = CurrentOrder;
@@ -107,6 +132,74 @@ function BaseController($rootScope, $state, Underscore, defaultErrorMessageResol
                 vm.currentOrder = data.Items[0];
             })
     })
+
+    vm.parameters = Parameters;
+    vm.categoryList = CategoryList;
+
+    //Category Tree Setup
+    vm.treeData = CategoryTree;
+    vm.treeOptions = {
+        equality: function(node1, node2) {
+            if (node2 && node1) {
+                return node1.ID === node2.ID;
+            } else {
+                return node1 === node2;
+            }
+        }
+    };
+
+    vm.selectNode = function(node) {
+        $state.go('productBrowse', {categoryid:node.ID, page:''});
+    };
+
+    //Initiate breadcrumbs is triggered by product list view (child state "productBrowse.products")
+    vm.initBreadcrumbs = function(activeCategoryID, ignoreSetNode) {
+        if (!ignoreSetNode) { //first iteration of initBreadcrumbs(), initiate breadcrumb array, set selected node for tree
+            vm.selectedNode = {ID:activeCategoryID};
+            vm.breadcrumb = [];
+        }
+        if (!activeCategoryID) { //at the catalog root, no expanded nodes
+            vm.expandedNodes = angular.copy(vm.breadcrumb);
+        } else {
+            var activeCategory = Underscore.findWhere(vm.categoryList.Items, {ID: activeCategoryID});
+            if (activeCategory) {
+                vm.breadcrumb.unshift(activeCategory);
+                if (activeCategory.ParentID) {
+                    vm.initBreadcrumbs(activeCategory.ParentID, true);
+                } else { //last iteration, set tree expanded nodes to the breadcrumb
+                    vm.expandedNodes = angular.copy(vm.breadcrumb);
+                }
+            }
+        }
+
+    };
+
+    vm.toggleFavorites = function() {
+        if (vm.parameters.filters && vm.parameters.filters.ID) delete vm.parameters.filters.ID;
+        if (vm.parameters.favorites) {
+            vm.parameters.favorites = '';
+        } else {
+            vm.parameters.favorites = true;
+            vm.parameters.page = '';
+        }
+        $state.go('productBrowse', vm.parameters);
+    };
+
+    //Cups Specific
+    vm.suppliers = SuppliersList;
+    //Filter current product list by supplier
+    vm.toggleSupplier = function(supplier) {
+        if (vm.parameters.filters && vm.parameters.filters.ShipFromAddressID) delete vm.parameters.ShipFromAddressID;
+        var suppliers = vm.parameters.suppliers ? vm.parameters.suppliers.split('|') : [];
+        var existingIndex = suppliers.indexOf(supplier.ID);
+        if (existingIndex > -1) {
+            suppliers.splice(existingIndex, 1);
+        } else {
+            suppliers.push(supplier.ID);
+        }
+        vm.parameters.suppliers = suppliers.join('|');
+        $state.go('productBrowse', OrderCloudParameters.Create(vm.parameters));
+    };
 }
 
 function NewOrderService($q, OrderCloud) {

@@ -1,52 +1,16 @@
 angular.module('orderCloud')
     .config(ProductBrowseConfig)
     .controller('ProductBrowseCtrl', ProductBrowseController)
-    .controller('ProductViewCtrl', ProductViewController)
     .directive('preventClick', PreventClick);
 
-function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.when('/browse', '/browse/products');
+function ProductBrowseConfig($stateProvider) {
     $stateProvider
         .state('productBrowse', {
-            abstract: true,
-            parent: 'base',
-            url: '/browse',
+            parent:'base',
+            url: '/browse?categoryid?favorites?search?page?pageSize?searchOn?sortBy?filters?depth?suppliers',
             templateUrl: 'productBrowse/templates/productBrowse.tpl.html',
             controller: 'ProductBrowseCtrl',
             controllerAs: 'productBrowse',
-            resolve: {
-                Parameters: function ($stateParams, OrderCloudParameters) {
-                    return OrderCloudParameters.Get($stateParams);
-                },
-                CategoryList: function(OrderCloud) {
-                    return OrderCloud.Me.ListCategories(null, 1, 100, null, null, null, 'all');
-                },
-                CategoryTree: function(CategoryList, Underscore) {
-                    var result = [];
-                    angular.forEach(Underscore.where(CategoryList.Items, {ParentID: null}), function(node) {
-                        result.push(getnode(node));
-                    });
-                    function getnode(node) {
-                        var children = Underscore.where(CategoryList.Items, {ParentID: node.ID});
-                        if (children.length > 0) {
-                            node.children = children;
-                            angular.forEach(children, function(child) {
-                                return getnode(child);
-                            });
-                        } else {
-                            node.children = [];
-                        }
-                        return node;
-                    }
-                    return result;
-                }
-            }
-        })
-        .state('productBrowse.products', {
-            url: '/products?categoryid?favorites?search?page?pageSize?searchOn?sortBy?filters?depth?suppliers',
-            templateUrl: 'productBrowse/templates/productView.tpl.html',
-            controller: 'ProductViewCtrl',
-            controllerAs: 'productView',
             resolve: {
                 Parameters: function ($stateParams, OrderCloudParameters) {
                     return OrderCloudParameters.Get($stateParams);
@@ -71,7 +35,7 @@ function ProductBrowseConfig($urlRouterProvider, $stateProvider) {
         });
 }
 
-function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, SuppliersList, OrderCloudParameters, Parameters) {
+/*function ProductBrowseController($state, Underscore, CategoryList, CategoryTree, SuppliersList, OrderCloudParameters, Parameters) {
     var vm = this;
     vm.parameters = Parameters;
     vm.categoryList = CategoryList;
@@ -140,13 +104,14 @@ function ProductBrowseController($state, Underscore, CategoryList, CategoryTree,
         vm.parameters.suppliers = suppliers.join('|');
         $state.go('productBrowse.products', OrderCloudParameters.Create(vm.parameters));
     };
-}
+}*/
 
-function ProductViewController($state, $ocMedia, ProductQuickView, OrderCloudParameters, OrderCloud, CurrentOrder, ProductList, CategoryList, Parameters){
+function ProductBrowseController($state, $ocMedia, ProductQuickView, OrderCloudParameters, SuppliersList, OrderCloud, CurrentOrder, ProductList, CategoryList, Parameters){
     var vm = this;
     vm.parameters = Parameters;
     vm.categories = CategoryList;
     vm.list = ProductList;
+
 
     vm.sortSelection = Parameters.sortBy ? (Parameters.sortBy.indexOf('!') == 0 ? Parameters.sortBy.split('!')[1] : Parameters.sortBy) : null;
 
