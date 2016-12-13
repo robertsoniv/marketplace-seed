@@ -1,0 +1,120 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+ body {
+    overflow-x: hidden;
+ }
+
+/* Toggle Styles */
+
+.l-cups-wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    &.toggled {
+        padding-left: 250px;
+        .l-cups-wrapper__sidebar {
+            width: 250px;
+        }
+        .l-cups-wrapper__content {
+            position: absolute;
+            margin-right: -250px;
+        }
+    }
+    &__sidebar {
+        z-index: 1000;
+        position: fixed;
+        left: 250px;
+        width: 0;
+        height: 100%;
+        margin-left: -250px;
+        overflow-y: auto;
+        background: @cups-dark;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+    &__content {
+        width: 100%;
+        padding-right: @grid-gutter-width;
+        position: absolute;
+    }
+}
+
+@media(min-width:@screen-sm) {
+    .menu-toggle {
+        display: none;
+    }
+    .l-cups-wrapper {
+        padding-left: 250px;
+        &__sidebar {
+            width: 250px;
+        }
+        &__content {
+            padding-right: 0;
+            position: relative;
+            margin-right: 0;
+        }
+        &.toggled {
+            padding-left: 250px;
+            .l-cups-wrapper__sidebar {
+                width: 250px;
+            }
+            .l-cups-wrapper__content {
+                position: relative;
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+/* Sidebar Styles */
+
+.c-cups-sidebar {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding-right: @grid-gutter-width;
+    &__header {
+        margin-top: @grid-gutter-width;
+        padding-left: @grid-gutter-width;
+        margin-bottom: @grid-gutter-width * 2;
+    }
+    &__brand {
+        img {
+            max-width: 102px;
+        }
+    }
+}
+
+.c-cups-nav {
+    &--stacked {
+        // override bootstrap specificity
+        &.nav {
+            > li {
+                line-height: 19px;
+                padding-bottom: @padding-large-vertical;
+                > a {
+                    padding-left: @grid-gutter-width;
+                }
+            }
+        }
+        .c-cups-nav__divider {
+            padding: @grid-gutter-width 0 @grid-gutter-width @grid-gutter-width;
+        }
+    }
+    &__header {
+        color: @cups-blue;
+        font-size: 11px;
+        padding-left: @grid-gutter-width;
+    }
+}
