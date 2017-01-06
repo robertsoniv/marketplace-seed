@@ -16,6 +16,26 @@
 @navbar-default-link-color: @cups-dark;
 
 //Typography
+@fa-font-path: "../images"; // TODO: this should point towards /fonts
+// custom font-awesome icons made using icomoon.io
+@fa-var-cups-cart: "\e900";
+@fa-var-cups-checkbox: "\e901";
+@fa-var-cups-checkbox-checked: "\e902";
+.@{fa-css-prefix}-cups-cart:before { content: @fa-var-cups-cart; }
+.@{fa-css-prefix}-cups-checkbox:before { content: @fa-var-cups-checkbox; }
+.@{fa-css-prefix}-cups-checkbox-checked:before { content: @fa-var-cups-checkbox-checked; }
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('@{fa-font-path}/fontawesome-webfont.eot?v=@{fa-version}');
+  src: url('@{fa-font-path}/fontawesome-webfont.eot?#iefix&v=@{fa-version}') format('embedded-opentype'),
+    url('@{fa-font-path}/fontawesome-webfont.woff?v=@{fa-version}') format('woff'),
+    url('@{fa-font-path}/fontawesome-webfont.ttf?v=@{fa-version}') format('truetype'),
+    url('@{fa-font-path}/fontawesome-webfont.svg?v=@{fa-version}#fontawesomeregular') format('svg');
+  // src: url('@{fa-font-path}/FontAwesome.otf') format('opentype'); // used when developing fonts
+  font-weight: normal;
+  font-style: normal;
+}
+
 @import url('//fonts.googleapis.com/css?family=Lato:400,400i,900,900i');
 @font-family-sans-serif: 'Lato', sans-serif;
 @font-size-base: 13px;
