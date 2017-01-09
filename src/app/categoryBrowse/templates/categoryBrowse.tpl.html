@@ -4,7 +4,7 @@
         <h3 class="page-header">{{categoryBrowse.selectedCategory.Name || 'Categories' }}</h3>
         <b class="pull-right">{{categoryBrowse.getNumberOfResults('categoryList')}}</b><br>
         <div class="row l-category-grid">
-            <div class="col-sm-6 col-md-4 col-lg-3 l-category-grid__item" ng-repeat="category in categoryBrowse.categoryList.Items">
+            <div class="col-sm-4 col-md-3 col-lg-2 l-category-grid__item" ng-repeat="category in categoryBrowse.categoryList.Items">
                 <div class="thumbnail c-category-card" ng-click="categoryBrowse.updateCategoryList(category.ID)">
                     <img class="img-responsive c-category-card__img" ng-src="{{category.xp.image.URL || 'http://placehold.it/300x300?text=' + category.Name}}">
                     <div class="caption c-category-card__body">
@@ -29,7 +29,7 @@
         <h3 class="page-header">{{categoryBrowse.productList.Items.length > 1 ? 'Products' : 'Product'}}</h3>
         <b class="pull-right">{{categoryBrowse.getNumberOfResults('productList')}}</b><br>
         <div class="row l-product-grid">
-            <div class="col-sm-6 col-md-4 col-lg-3 l-product-grid__item"
+            <div class="col-sm-6 col-md-4 col-lg-2 l-product-grid__item"
                  ng-repeat="product in categoryBrowse.productList.Items"
                  ng-include="'common/productCard/productCard.tpl.html'">
             </div>

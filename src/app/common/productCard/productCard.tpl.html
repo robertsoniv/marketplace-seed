@@ -1,5 +1,8 @@
 <div class="thumbnail c-product-card" ui-sref="productDetail({productid: product.ID})">
-    <img class="img-responsive c-product-card__img" ng-src="{{'assets/images/products/' + product.ID + '.jpg'}}" alt="{{product.ID + '.jpg'}}">
+    <!-- TODO: div wraps image so that flex styles do not get applied to image -->
+    <div>
+        <img class="img-responsive c-product-card__img" ng-src="{{'assets/images/products/' + product.ID + '.jpg'}}" alt="{{product.ID + '.jpg'}}">
+    </div>
     <div class="caption c-product-card__body">
         <div class="c-product-card__info clearfix">
             <span class="pull-left c-product-card__id" ng-if="product.Name">{{product.ID}}</span>
