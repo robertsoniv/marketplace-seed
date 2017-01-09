@@ -35,7 +35,7 @@ body {
         height: 100%;
         margin-left: -@cups-sidebar-width;
         overflow-y: auto;
-        background: @cups-dark;
+        background: @cups-grey;
         -webkit-transition: all 0.5s ease;
         -moz-transition: all 0.5s ease;
         -o-transition: all 0.5s ease;
@@ -85,34 +85,45 @@ body {
     list-style: none;
     padding-right: @grid-gutter-width;
     // category tree styles
+    // TODO: organize these styles in a logical way
     treecontrol.c-cups-sidebar__tree {
-        color: #a5b1b7; //TODO: variable
+        color: @cups-dark;
         > ul {
             padding: 0;
             li {
                 line-height: 19px;
-                padding-bottom: @padding-large-vertical;
-                padding-left: @grid-gutter-width;
-                li {
-                    // padding-left: @grid-gutter-width / 2;
+                margin-bottom: @padding-large-vertical;
+                padding-left: 0px;
+                border-radius: @nav-pills-border-radius;
+                &.tree-leaf {
+                    &.c-liSelected,
+                    &:hover,
+                    &:focus {
+                        background-color: @cups-dark-grey;
+                    }
                 }
                 i.tree-branch-head {
-                    position: relative;
-                    width: @grid-gutter-width / 2;
-                    left:auto;
-                    top:auto;
-                    display: inline-block;
+                    left: @grid-gutter-width;
                     text-align: left;
                 }
+                &.tree-collapsed,
                 &.tree-expanded {
+                    .tree-label {
+                        padding-left: @grid-gutter-width * 1.5;
+                    }
+                }
+                &.tree-expanded {
+                    font-weight: bold;
+                    background-color: transparent;
                     ul {
                         li {
-                            padding-left: @grid-gutter-width / 2;
+                            font-weight: normal;
+                            padding-left: 0;
                             &:first-child {
-                                padding-top: @grid-gutter-width / 4;
+                                margin-top: @grid-gutter-width / 4;
                             }
                             &:last-child {
-                                padding-bottom: 0;
+                                margin-bottom: 0;
                             }
                         }
                     }
@@ -123,8 +134,10 @@ body {
                     }
                 }
                 .tree-label {
-                    display: inline-block;
-                    padding-left: 0;
+                    padding-left: @grid-gutter-width;
+                    &.tree-selected {
+                        color: @cups-dark;
+                    }
                 }
             }
         }
@@ -207,6 +220,30 @@ body {
         @media(min-width:@screen-sm) {
             display: none;
         }
+    }
+    .nav {
+        >li {
+            >a {
+                color: @cups-dark;
+                &:hover,
+                &:focus {
+                    background-color: @cups-dark-grey;
+                }
+            }
+            &.c-supplier-nav {
+                a {
+                    &:hover,
+                    &:focus {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+    .c-checkbox {
+        // TODO: size icons dynamically
+        margin-right: 3px;
+        font-size: 11px;
     }
 }
 

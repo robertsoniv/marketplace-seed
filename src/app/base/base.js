@@ -145,6 +145,9 @@ function BaseController($rootScope, $state, Underscore, defaultErrorMessageResol
             } else {
                 return node1 === node2;
             }
+        },
+        injectClasses: {
+            "liSelected": "c-liSelected"
         }
     };
 

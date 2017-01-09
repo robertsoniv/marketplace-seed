@@ -5,7 +5,7 @@
     <aside class="l-cups-wrapper__sidebar">
         <nav class="c-cups-sidebar">
             <header class="c-cups-sidebar__header">
-                <a ui-sref="home" class="c-cups-sidebar__brand" data-ng-click="isToggled = !isToggled"><img src="assets/images/cups_logo.png" alt="CUPS"></a>
+                <a ui-sref="home" class="c-cups-sidebar__brand" data-ng-click="isToggled = !isToggled"><img src="assets/images/cupslogodark.svg" alt="CUPS"></a>
             </header>
             <ul class="nav nav-pills nav-stacked c-cups-nav--stacked">
 
@@ -24,11 +24,11 @@
                 </treecontrol>
                 <li class="c-cups-nav__divider"></li>
                 <li class="c-cups-nav__header">Suppliers</li>
-                <li ng-repeat="supplier in base.suppliers.Items">
+                <li class="c-supplier-nav" ng-repeat="supplier in base.suppliers.Items">
                     <a ng-click="base.toggleSupplier(supplier)">
-                        <i class="fa" ng-class="{
-                            'fa-circle-o text-muted': base.parameters.suppliers.indexOf(supplier.ID) == -1 || !base.parameters.suppliers,
-                            'fa-circle text-primary': base.parameters.suppliers.indexOf(supplier.ID) > -1
+                        <i class="fa c-checkbox" ng-class="{
+                            'fa-cups-checkbox': base.parameters.suppliers.indexOf(supplier.ID) == -1 || !base.parameters.suppliers,
+                            'fa-cups-checkbox-checked': base.parameters.suppliers.indexOf(supplier.ID) > -1
                         }"></i>
                         {{supplier.CompanyName}}
                     </a>
