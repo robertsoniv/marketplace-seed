@@ -84,8 +84,50 @@ body {
     padding: 0;
     list-style: none;
     padding-right: @grid-gutter-width;
-    treecontrol.oc-tree {
+    // category tree styles
+    treecontrol.c-cups-sidebar__tree {
         color: #a5b1b7; //TODO: variable
+        > ul {
+            padding: 0;
+            li {
+                line-height: 19px;
+                padding-bottom: @padding-large-vertical;
+                padding-left: @grid-gutter-width;
+                li {
+                    // padding-left: @grid-gutter-width / 2;
+                }
+                i.tree-branch-head {
+                    position: relative;
+                    width: @grid-gutter-width / 2;
+                    left:auto;
+                    top:auto;
+                    display: inline-block;
+                    text-align: left;
+                }
+                &.tree-expanded {
+                    ul {
+                        li {
+                            padding-left: @grid-gutter-width / 2;
+                            &:first-child {
+                                padding-top: @grid-gutter-width / 4;
+                            }
+                            &:last-child {
+                                padding-bottom: 0;
+                            }
+                        }
+                    }
+                }
+                &.tree-leaf {
+                    i.tree-branch-head {
+                        display: none;
+                    }
+                }
+                .tree-label {
+                    display: inline-block;
+                    padding-left: 0;
+                }
+            }
+        }
     }
     &__header {
         margin-top: @grid-gutter-width;

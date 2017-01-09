@@ -13,7 +13,8 @@
                     <a href="" ui-sref="productBrowse({favorites:'', categoryid:'',suppliers:'', sortBy:''})">All Products</a>
                 </li>
                 <li class="c-cups-nav__header">Categories</li>
-                <treecontrol class="oc-tree"
+                <li><a ui-sref="favoriteProducts" data-ng-click="isToggled = !isToggled">Favorite Products</a></li>
+                <treecontrol class="oc-tree c-cups-sidebar__tree"
                              tree-model="base.treeData"
                              options="base.treeOptions"
                              selected-node="base.selectedNode"
@@ -37,7 +38,6 @@
                 <li class="c-cups-nav__header">Account</li>
                 <li><a ui-sref="account.settings" data-ng-click="isToggled = !isToggled">Settings</a></li>
                 <li><a ui-sref="myAddresses" data-ng-click="isToggled = !isToggled">Addresses</a></li>
-                <li><a ui-sref="favoriteProducts" data-ng-click="isToggled = !isToggled">Favorite Products</a></li>
                 <li class="c-cups-nav__divider"></li>
                 <li><a ng-click="application.logout()" data-ng-click="isToggled = !isToggled">Logout</a></li>
             </ul>
