@@ -62,7 +62,7 @@
                         </div>
                         <div class="row c-line-item" ng-repeat="lineItem in cart.lineItems.Items | filter:{$:supplier.ID} track by $index">
                             <div class="col-xs-3 col-sm-2">
-                                <div class="thumbnail c-line-item__img">
+                                <div class="c-line-item__img">
                                     <img class="img-responsive" ng-src="{{'assets/images/products/' + lineItem.ProductID + '.jpg'}}"
                                          alt="{{lineItem.ProductID + '.jpg'}}">
                                 </div>
@@ -96,7 +96,7 @@
                                             </div>
                                             <div class="col-xs-2">
                                                 <div class="c-line-item__remove text-right">
-                                                    <button class="btn btn-xs btn-danger" ng-click="cart.removeItem(lineItem)"><span class=""><i class="fa fa-close"></i></span></button>
+                                                    <button class="btn btn-link" ng-click="cart.removeItem(lineItem)"><span class=""><i class="fa fa-close"></i></span></button>
                                                 </div>
                                             </div>
                                         </div>

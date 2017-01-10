@@ -12,9 +12,9 @@
         <div class="c-product-card__descrip" ng-if="product.Description">
             <p>{{product.Description}}</p>
         </div>
-        <div class="text-right c-product-card__icons" prevent-click>
+        <div class="c-product-card__icons" prevent-click>
             <i class="fa fa-eye text-primary" ng-click="productBrowse.quickView(product)"></i>
-            <ordercloud-favorite-product product="product" current-user="base.currentUser"></ordercloud-favorite-product>
+            <ordercloud-favorite-product product="product" current-user="base.currentUser" class="pull-right"></ordercloud-favorite-product>
         </div>
     </div>
 </div>
