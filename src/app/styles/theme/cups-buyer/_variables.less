@@ -10,6 +10,7 @@
 @gray-base: @cups-dark;
 @brand-primary: @cups-blue;
 @brand-success: @brand-primary;
+@brand-danger: #ff0000;
 
 //Scaffolding
 @text-color: @gray-base;
@@ -41,6 +42,10 @@
 @import url('//fonts.googleapis.com/css?family=Lato:400,400i,900,900i');
 @font-family-sans-serif: 'Lato', sans-serif;
 @font-size-base: 13px;
+
+.text-danger {
+  .text-emphasis-variant(@brand-danger);
+}
 
 //Components
 @border-radius-base: 15px;
