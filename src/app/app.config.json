@@ -1,9 +1,10 @@
 {
   "appname": "CUPS Supply Store",
   "scope": "FullAccess",
-  "clientid": "F286B844-C604-4081-9D22-F79EA176D8DC",
+  "clientid": "46C6C093-2CB8-49CB-B9F9-87672E813AB1",
   "buyerid": "cafebiba",
-  "catalogid": "cafebiba",
+  "catalogid": "defaultCupsCatalog",
   "environment": "prod",
+  "defaultstate": "home",
   "anonymous": false
 }
